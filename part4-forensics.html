@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="بخش ۴: وایرلس، فارنزیک و گزارش‌دهی — aircrack-ng، wifite، tshark، binwalk، exiftool و برگه تقلب">
+<title>بخش ۴ — وایرلس، فارنزیک و گزارش</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="topbar"><a href="index.html">🐉 راهنمای Kali</a><button class="btn" id="themeBtn">☀️</button></div>
+<div class="wrap">
+<div class="hero"><h1>بخش ۴ — <span class="grad">وایرلس، فارنزیک و گزارش</span></h1>
+<p>گوشه‌های تخصصی Kali: شبکه‌های بی‌سیم، تحلیل شواهد دیجیتال، و مهارتی که همه‌چیز را کامل می‌کند: گزارش‌نویسی.</p></div>
+
+<div class="cmd"><h3><code class="cmdname" dir="ltr">airmon-ng suite</code><span>اسکن و حمله به شبکه‌های Wi-Fi</span></h3>
+<div class="codewrap"><button class="copybtn">کپی</button><pre><code>sudo airmon-ng check kill        # قطع تداخل سرویس‌ها
+sudo airmon-ng start wlan0       # ساخت wlan0mon
+sudo airodump-ng wlan0mon        # دیدن همه APها و کلاینت‌ها
+sudo airodump-ng -c 6 --bssid AA:BB:CC:DD:EE:FF -w cap wlan0mon
+# در ترمینال دیگر — گرفتن هندشیک (فقط روی شبکه خودتان!)
+sudo aireplay-ng -0 5 -a AA:BB:CC:DD:EE:FF -c CLIENT_MAC wlan0mon
+# کرک هندشیک:
+aircrack-ng -w /usr/share/wordlists/rockyou.txt cap-01.cap
+# پایان کار:
+sudo airmon-ng stop wlan0mon</code></pre></div>
+<div class="warn">⚠️ حمله به شبکه‌های وایرلسی که مال شما نیستند غیرقانونی است — این دستورات فقط برای lab شخصی و CTF. سادگی: <code dir="ltr">wifite</code> همه این مراحل را خودکار می‌کند: <code dir="ltr">sudo wifite</code></div></div>
+
+<div class="cmd"><h3><code class="cmdname" dir="ltr">tshark</code><span>خط فرمان Wireshark</span></h3>
+<div class="codewrap"><button class="copybtn">کپی</button><pre><code>sudo tshark -i eth0 -w capture.pcap
+sudo tshark -i eth0 -Y "http" -T fields -e ip.src -e http.request.full_uri
+sudo tshark -r capture.pcap -Y "tcp.port==443" | head
+tshark --version | head -1</code></pre></div></div>
+
+<div class="cmd"><h3><code class="cmdname" dir="ltr">volatility</code><span>تحلیل حافظه RAM (فارنزیک)</span></h3>
+<div class="codewrap"><button class="copybtn">کپی</button><pre><code># نسخه ۲:
+python2 vol.py -f memory.dmp imageinfo
+python2 vol.py -f memory.dmp --profile=Win7SP1x64 pslist
+python2 vol.py -f memory.dmp --profile=Win7SP1x64 hashdump
+# نسخه ۳ (kali-rolling):
+vol3 -f memory.dmp windows.pslist
+vol3 -f memory.dmp windows.cmdline</code></pre></div></div>
+
+<div class="cmd"><h3><code class="cmdname" dir="ltr">binwalk</code><span>کاوش فایل‌های ترکیبی و فریم‌ورها</span></h3>
+<div class="codewrap"><button class="copybtn">کپی</button><pre><code>binwalk firmware.bin                 # شناسایی امضاهای داخلی
+binwalk -e firmware.bin              # استخراج خودکار
+binwalk --dd=".*" firmware.bin      # استخراج همه‌چیز</code></pre></div></div>
+
+<div class="cmd"><h3><code class="cmdname" dir="ltr">exiftool</code><span>متادیتا — گاهی همه‌چیز در توضیحات تصویر است</span></h3>
+<div class="codewrap"><button class="copybtn">کپی</button><pre><code>exiftool photo.jpg
+exiftool -a -u -g1 photo.jpg         # همه تگ‌ها شامل مخفی
+exiftool -all= photo_clean.jpg photo.jpg   # حذف متادیتا</code></pre></div></div>
+
+<div class="cmd"><h3><code class="cmdname" dir="ltr">reporting</code><span>گزارش‌دهی — مهارت واقعی حرفه‌ای</span></h3>
+<p>هکر خوب گزارش خوب می‌نویسد. مشتری خروجی شما را از گزارش می‌فهمد، نه از ترمینال.</p>
+<ul>
+<li><b>خلاصه اجرایی</b> برای مدیران: ریسک، بدون اصطلاح فنی.</li>
+<li><b>یافته‌ها</b>: هر مورد با شدت (Critical/High/Medium/Low)، مراحل بازتولید، تصویر، و راه‌حل.</li>
+<li><b>مستندات</b>: زمان‌بندی، ابزارها، دستورات دقیق.</li>
+</ul>
+<div class="codewrap"><button class="copybtn">کپی</button><pre><code># ساختار پیشنهادی پروژه
+mkdir -p ~/eng/{recon,exploit,loot,report,screens}
+# ثبت همه اسکن‌ها از همان اول:
+nmap -sV -oA recon/initial 10.10.10.5
+# در پایان، خروجی‌ها را به گزارش پیوست کنید.</code></pre></div></div>
+
+<h2>⭐ برگه تقلب نهایی</h2>
+<div class="codewrap"><button class="copybtn">کپی</button><pre><code># ── بروزرسانی ──
+sudo apt update && sudo apt full-upgrade -y
+# ── شناخت ──
+sudo nmap -sV -sC -oA recon/initial TARGET
+gobuster dir -u http://TARGET -w /usr/share/wordlists/dirb/common.txt
+# ── نفوذ ──
+searchsploit SERVICE VERSION
+msfconsole -q -x "search TYPE:version"
+# ── پسورد ──
+hydra -l admin -P /usr/share/wordlists/rockyou.txt ssh://TARGET
+hashcat -m 1800 hashes.txt rockyou.txt
+# ── اضطراری: هیچی کار نکرد؟ ──
+sudo tcpdump -i tun0 -A | head          # ترافیک خودت را ببین
+ls -la /var/www/html/ ; cat /etc/crontab # مکان‌های کلاسیک</code></pre></div>
+
+<div class="note">🌱 یادگیری در Kali با «مجوز» شروع می‌شود، نه با دستور. هک‌باکس، TryHackMe، Proving Grounds و VMهای خودتان — بعد از آن، دنیای واقعی.</div>
+</div>
+<footer>بخش ۴ از ۴ — <a href="index.html">بازگشت به فهرست ←</a></footer>
+<script>
+var b=document.getElementById("themeBtn"),h=document.documentElement;
+function t(v){h.setAttribute("data-theme",v);b.textContent=v==="light"?"🌙":"☀️";try{localStorage.setItem("kali-guide-theme",v)}catch(e){}}
+var s=null;try{s=localStorage.getItem("kali-guide-theme")}catch(e){}
+t(s==="light"?"light":"dark");
+b.addEventListener("click",function(){t(h.getAttribute("data-theme")==="light"?"dark":"light")});
+document.querySelectorAll(".codewrap").forEach(function(w){var c=w.querySelector(".copybtn");if(!c)return;c.addEventListener("click",function(){var t2=w.querySelector("code").textContent.replace(/\n$/,"");function ok(){c.classList.add("ok");c.textContent="کپی شد ✓";setTimeout(function(){c.classList.remove("ok");c.textContent="کپی"},1600)}navigator.clipboard?navigator.clipboard.writeText(t2).then(ok,ok):ok()})});
+</script>
+</body>
+</html>

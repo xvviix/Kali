@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="راهنمای متمرکز دستورات و ابزارهای Kali Linux — فارسی، راست‌چین، آفلاین">
+<title>راهنمای متمرکز Kali Linux</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="topbar"><a href="index.html">🐉 راهنمای Kali</a><button class="btn" id="themeBtn" title="تغییر تم">☀️</button></div>
+<div class="wrap">
+<div class="hero">
+<h1>راهنمای متمرکز <span class="grad">Kali Linux</span></h1>
+<p>دستورات و ابزارهای کلیدی Kali در چهار بخش — فارسی، راست‌چین، آفلاین. هر بخش یک صفحه مستقل؛ همه مثال‌ها با دکمه کپی.</p>
+<p class="chip" style="display:inline-block;direction:rtl;background:var(--panel2);border:1px solid var(--border);color:var(--muted);padding:2px 12px;border-radius:99px;font-size:.8rem">همراه: <a href="https://github.com/xvviix/Linux-commands">هندبوک جامع لینوکس</a></p>
+</div>
+<div class="warn">⚖️ این راهنما فقط برای تست امنیتی <b>مجاز</b>، یادگیری و CTF است. پیش از تست هر سیستمی که مال شما نیست، اجازه کتبی بگیرید. مسئولیت استفاده نادرست با شماست.</div>
+<h2>فهرست بخش‌ها</h2>
+<table>
+<tr><th>بخش</th><th>موضوع</th><th>ابزارهای کلیدی</th></tr>
+<tr><td>۱</td><td><a href="part1-basics.html">مبانی و راه‌اندازی Kali</a></td><td><code>apt</code>، <code>kali-tweaks</code>، <code>metapackages</code>، کاربران، سرویس‌ها</td></tr>
+<tr><td>۲</td><td><a href="part2-recon.html">شناخت و اسکن (Recon)</a></td><td><code>nmap</code>، <code>masscan</code>، <code>enum4linux</code>، <code>whatweb</code>، <code>theHarvester</code>، <code>amass</code></td></tr>
+<tr><td>۳</td><td><a href="part3-web.html">وب و اکسپلویت</a></td><td><code>gobuster</code>، <code>nikto</code>، <code>sqlmap</code>، <code>searchsploit</code>، <code>msfconsole</code>، <code>hydra</code>، <code>john</code>، <code>hashcat</code></td></tr>
+<tr><td>۴</td><td><a href="part4-forensics.html">وایرلس، فارنزیک و گزارش</a></td><td><code>aircrack-ng</code>، <code>wifite</code>، <code>tshark</code>، <code>binwalk</code>، <code>exiftool</code>، برگه تقلب نهایی</td></tr>
+</table>
+</div>
+<footer>راهنمای Kali Linux — ساخته‌شده توسط <b>XVVIIX</b> 🐉</footer>
+<script>
+var b=document.getElementById("themeBtn"),h=document.documentElement;
+function t(v){h.setAttribute("data-theme",v);b.textContent=v==="light"?"🌙":"☀️";try{localStorage.setItem("kali-guide-theme",v)}catch(e){}}
+var s=null;try{s=localStorage.getItem("kali-guide-theme")}catch(e){}
+t(s==="light"?"light":"dark");
+b.addEventListener("click",function(){t(h.getAttribute("data-theme")==="light"?"dark":"light")});
+document.querySelectorAll(".codewrap").forEach(function(w){var c=w.querySelector(".copybtn");if(!c)return;c.addEventListener("click",function(){var t2=w.querySelector("code").textContent.replace(/\n$/,"");function ok(){c.classList.add("ok");c.textContent="کپی شد ✓";setTimeout(function(){c.classList.remove("ok");c.textContent="کپی"},1600)}navigator.clipboard?navigator.clipboard.writeText(t2).then(ok,ok):ok()})});
+</script>
+</body>
+</html>
