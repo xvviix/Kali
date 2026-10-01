@@ -4,11 +4,24 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="بخش ۲: شناخت و اسکن — nmap، masscan، enum4linux، whatweb، theHarvester، amass">
 <title>بخش ۲ — شناخت و اسکن (Recon)</title>
+<meta name="theme-color" content="#07100f">
+<link rel="stylesheet" href="fonts.css">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<div class="topbar"><a href="index.html">🐉 راهنمای Kali</a><button class="btn" id="themeBtn">☀️</button></div>
-<div class="wrap">
+<a class="skip-link" href="#content">رفتن به محتوا</a>
+<header class="topbar" id="topbar">
+  <div class="progress" id="progress"></div>
+  <div class="nav-inner">
+    <a class="brand" href="index.html"><span class="brand-mark">🐉</span><span class="brand-text">هندبوک Kali</span></a>
+    <label class="global-search"><span class="search-icon">🔍</span><input id="siteSearch" type="search" placeholder="جست‌وجوی این صفحه… مثلاً: nmap، شبکه، Burp" autocomplete="off" aria-label="جست‌وجو در صفحه"><kbd>/</kbd></label>
+    <div class="actions"><button class="btn icon-btn" id="printBtn" aria-label="چاپ یا ذخیره PDF" title="چاپ یا ذخیره PDF">🖨️</button><button class="btn icon-btn" id="themeBtn" aria-label="تغییر تم" title="تغییر تم روشن/تاریک">☀️</button></div>
+  </div>
+  <div class="results-bar" id="resultsBar"></div>
+</header>
+<main class="wrap" id="content">
+<div class="breadcrumbs"><a href="index.html">خانه</a><span>←</span><span>شناخت و اسکن</span></div>
+<div class="page-layout"><div class="page-main">
 <div class="hero"><h1>بخش ۲ — <span class="grad">شناخت و اسکن</span></h1>
 <p>قبل از هر حمله، باید بدانید چه چیزی در مقابل شماست. این بخش از عمومی به جزئی می‌رود: هاست، پورت، سرویس، دامنه.</p></div>
 
@@ -27,7 +40,7 @@ sudo nmap --script smb-vuln* -p 139,445 10.10.10.5
 sudo nmap -sV -oA scan_target 10.10.10.5   # متن + xml + grep</code></pre></div>
 <div class="note">💡 <code dir="ltr">-sV</code> نسخه سرویس را می‌خواند؛ <code dir="ltr">-sC</code> اسکریپت‌های پیش‌فرض را اجرا می‌کند. <code dir="ltr">-oA</code> برای گزارش‌گیری همیشه بزنید.</div></div>
 
-<div class="cmd"><h3><code class="cmdname" dir="ltr">masscan</code><span>اسکن کل اینترنت در دقیقه‌ها</span></h3>
+<div class="cmd"><h3><code class="cmdname" dir="ltr">masscan</code><span>اسکن سریع بازه‌های بزرگ مجاز</span></h3>
 <p>برای رنج‌های بزرگ IP — سرعت nmap را ندارد در دقت، اما در سرعت بی‌رقیب است.</p>
 <div class="codewrap"><button class="copybtn">کپی</button><pre><code>sudo masscan 10.10.10.0/24 -p 80,443 --rate 1000
 sudo masscan 10.10.10.0/24 -p 1-65535 --rate 10000 > mass.txt
@@ -49,33 +62,44 @@ nbtscan 10.10.10.5                     # NetBIOS</code></pre></div></div>
 
 <div class="cmd"><h3><code class="cmdname" dir="ltr">whatweb</code><span>انگشت‌نگاری وب‌سایت</span></h3>
 <div class="codewrap"><button class="copybtn">کپی</button><pre><code>whatweb http://10.10.10.5
-whatweb -a 3 http://site.com            # سطح تجزیه‌ی تهاجمی‌تر</code></pre></div></div>
+whatweb -a 3 http://example.com            # سطح تجزیه‌ی تهاجمی‌تر</code></pre></div></div>
 
 <div class="cmd"><h3><code class="cmdname" dir="ltr">theHarvester</code><span>جمع‌آوری ایمیل/ساب‌دامنه از منابع عمومی</span></h3>
-<div class="codewrap"><button class="copybtn">کپی</button><pre><code>theHarvester -d company.com -l 200 -b google,bing,crtsh
-theHarvester -d company.com -b linkedin   # نام کارکنان</code></pre></div></div>
+<div class="codewrap"><button class="copybtn">کپی</button><pre><code>theHarvester -d example.com -l 200 -b google,bing,crtsh
+theHarvester -d example.com -b linkedin   # نام کارکنان</code></pre></div></div>
 
 <div class="cmd"><h3><code class="cmdname" dir="ltr">amass</code><span>نقشه‌برداری حرفه‌ای زیرساخت دامنه</span></h3>
-<div class="codewrap"><button class="copybtn">کپی</button><pre><code>amass enum -d company.com -o amass.txt
-amass enum -passive -d company.com        # فقط منابع عمومی
-amass viz -d3 company.com                 # نمودار گرافی</code></pre></div></div>
+<div class="codewrap"><button class="copybtn">کپی</button><pre><code>amass enum -d example.com -o amass.txt
+amass enum -passive -d example.com        # فقط منابع عمومی
+amass enum -passive -d example.com -o amass-passive.txt</code></pre></div></div>
 
 <div class="cmd"><h3><code class="cmdname" dir="ltr">dnsrecon / dig</code><span>بررسی DNS و transfer</span></h3>
-<div class="codewrap"><button class="copybtn">کپی</button><pre><code>dnsrecon -d company.com -t std
-dnsrecon -d company.com -t axfr         # تلاش zone transfer
-dig axfr company.com @ns1.company.com
-dig +short mail.company.com; host -t MX company.com</code></pre></div></div>
+<div class="codewrap"><button class="copybtn">کپی</button><pre><code>dnsrecon -d example.com -t std
+dnsrecon -d example.com -t axfr         # تلاش zone transfer
+dig axfr example.com @ns1.example.com
+dig +short mail.example.com; host -t MX example.com</code></pre></div></div>
+
+
+<div class="cmd"><h3><code class="cmdname" dir="ltr">curl / httpx</code><span>اعتبارسنجی سرویس‌های HTTP</span></h3>
+<p>پس از یافتن پورت وب، پاسخ، عنوان، ریدایرکت و هدرهای مهم را ثبت کنید.</p>
+<div class="codewrap"><button class="copybtn">کپی</button><pre><code>curl -I http://10.10.10.5
+curl -skL -o /dev/null -w '%{http_code} %{url_effective}\n' https://10.10.10.5
+printf 'http://10.10.10.5\nhttps://10.10.10.5\n' | httpx -title -status-code -tech-detect</code></pre></div></div>
+
+<div class="cmd"><h3><code class="cmdname" dir="ltr">whois / crt.sh</code><span>شناسایی غیرفعال</span></h3>
+<p>داده‌های عمومی معمولاً کم‌خطرترین نقطه شروع هستند. مالکیت و دامنه‌های خارج از scope را با هدف اشتباه نگیرید.</p>
+<div class="codewrap"><button class="copybtn">کپی</button><pre><code>whois example.com | less
+dig +short NS example.com
+dig +short TXT example.com
+curl -s 'https://crt.sh/?q=%25.example.com&output=json' -o crt.json</code></pre></div></div>
+
+<div class="note">🧭 هر یافته را با منبع، زمان و درجه اطمینان ثبت کنید. وجود یک نام در گواهی قدیمی به‌تنهایی اثبات نمی‌کند که آن دارایی هنوز متعلق به سازمان یا داخل محدوده است.</div>
 
 <div class="note">📚 روش درست recon: عمومی (whois/Google) → دامنه (amass) → هاست (nmap -sn) → پورت (-p-) → سرویس (-sV) → شمارش (enum4linux/whatweb) → سپس فاز اکسپلویت بخش ۳.</div>
-</div>
-<footer>بخش ۲ از ۴ — <a href="part3-web.html">بعدی: وب و اکسپلویت ←</a></footer>
-<script>
-var b=document.getElementById("themeBtn"),h=document.documentElement;
-function t(v){h.setAttribute("data-theme",v);b.textContent=v==="light"?"🌙":"☀️";try{localStorage.setItem("kali-guide-theme",v)}catch(e){}}
-var s=null;try{s=localStorage.getItem("kali-guide-theme")}catch(e){}
-t(s==="light"?"light":"dark");
-b.addEventListener("click",function(){t(h.getAttribute("data-theme")==="light"?"dark":"light")});
-document.querySelectorAll(".codewrap").forEach(function(w){var c=w.querySelector(".copybtn");if(!c)return;c.addEventListener("click",function(){var t2=w.querySelector("code").textContent.replace(/\n$/,"");function ok(){c.classList.add("ok");c.textContent="کپی شد ✓";setTimeout(function(){c.classList.remove("ok");c.textContent="کپی"},1600)}navigator.clipboard?navigator.clipboard.writeText(t2).then(ok,ok):ok()})});
-</script>
+</div><aside class="page-toc" aria-label="فهرست این صفحه"><strong>در این صفحه</strong><nav id="pageToc"></nav></aside></div>
+</main>
+<footer>بخش ۲ از ۵ — <a href="part3-web.html">بعدی: وب و اکسپلویت ←</a></footer>
+<button class="btn back-top" id="backTop" aria-label="بازگشت به بالا">↑</button>
+<script src="app.js"></script>
 </body>
 </html>

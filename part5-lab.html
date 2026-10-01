@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="بخش ۵ راهنمای Kali: ساخت لابراتوار ایزوله، تعریف محدوده، ثبت شواهد و گردش‌کار حرفه‌ای ارزیابی امنیتی">
+<meta name="theme-color" content="#07100f">
+<title>بخش ۵ — لابراتوار و گردش‌کار حرفه‌ای</title>
+<link rel="stylesheet" href="fonts.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<a class="skip-link" href="#content">رفتن به محتوا</a>
+<header class="topbar" id="topbar">
+  <div class="progress" id="progress"></div>
+  <div class="nav-inner">
+    <a class="brand" href="index.html"><span class="brand-mark">🐉</span><span class="brand-text">هندبوک Kali</span></a>
+    <label class="global-search"><span class="search-icon">🔍</span><input id="siteSearch" type="search" placeholder="جست‌وجوی این صفحه… مثلاً: nmap، شبکه، Burp" autocomplete="off" aria-label="جست‌وجو در صفحه"><kbd>/</kbd></label>
+    <div class="actions"><button class="btn icon-btn" id="printBtn" aria-label="چاپ یا ذخیره PDF" title="چاپ یا ذخیره PDF">🖨️</button><button class="btn icon-btn" id="themeBtn" aria-label="تغییر تم" title="تغییر تم روشن/تاریک">☀️</button></div>
+  </div>
+  <div class="results-bar" id="resultsBar"></div>
+</header>
+<main class="wrap" id="content">
+<div class="breadcrumbs"><a href="index.html">خانه</a><span>←</span><span>لابراتوار و گردش‌کار</span></div>
+<div class="page-layout"><div class="page-main">
+<div class="hero"><div class="eyebrow">PART 05 · SAFE PRACTICE</div><h1>لابراتوار و <span class="grad">گردش‌کار حرفه‌ای</span></h1><p>ابزار مهم است، اما محیط امن، محدوده روشن، شواهد مرتب و گزارش قابل اقدام یک ارزیابی را حرفه‌ای می‌کنند.</p></div>
+
+<h2>ساخت لابراتوار ایزوله</h2>
+<div class="cmd"><h3><code class="cmdname" dir="ltr">VirtualBox / VMware</code><span>شبکه Host-only</span></h3>
+<p>برای Kali و ماشین هدف یک شبکه <b>Host-only</b> یا <b>Internal Network</b> بسازید. ماشین هدف آسیب‌پذیر نباید مستقیماً به شبکه خانه یا اینترنت دسترسی داشته باشد.</p>
+<table><tr><th>ماشین</th><th>نمونه IP</th><th>نقش</th></tr><tr><td>Kali</td><td dir="ltr">192.168.56.10</td><td>ایستگاه ارزیابی</td></tr><tr><td>Target</td><td dir="ltr">192.168.56.20</td><td>ماشین تمرین</td></tr><tr><td>Gateway</td><td>ندارد</td><td>جلوگیری از خروج ناخواسته</td></tr></table>
+<div class="codewrap"><button class="copybtn">کپی</button><pre><code># بررسی اینکه هر دو ماشین فقط روی شبکه لابراتوارند
+ip -br address
+ip route
+ping -c 3 192.168.56.20
+# ثبت baseline پیش از تمرین
+nmap -sV -sC -oA recon/baseline 192.168.56.20</code></pre></div>
+<div class="warn">⚠️ از حالت Bridged برای ماشین‌های عمداً آسیب‌پذیر استفاده نکنید. قابلیت clipboard و shared folder را هم فقط هنگام نیاز فعال کنید.</div></div>
+
+<div class="cmd"><h3><code class="cmdname" dir="ltr">snapshots</code><span>بازگشت‌پذیری آزمایش</span></h3>
+<ol><li>سیستم‌عامل و ابزارها را به‌روز کنید.</li><li>یک snapshot با نام <code dir="ltr">clean-baseline</code> بگیرید.</li><li>پس از هر سناریو، شواهد را خارج و ماشین را برگردانید.</li><li>برای بدافزار یا فایل ناشناس، شبکه را قطع و پوشه مشترک را خاموش کنید.</li></ol></div>
+
+<h2>تعریف پروژه و محدوده</h2>
+<div class="cmd"><h3><code class="cmdname" dir="ltr">scope.md</code><span>قواعد درگیری</span></h3>
+<p>حتی برای تمرین تیمی، یک فایل کوتاه بسازید تا هدف، زمان و محدودیت‌ها مبهم نماند.</p>
+<div class="codewrap"><button class="copybtn">کپی</button><pre><code># Scope
+Owner: Lab team
+Window: 2026-10-01 09:00–17:00 UTC
+In scope: 192.168.56.20, app.lab.test
+Out of scope: host machine, home LAN, third-party services
+Allowed: discovery, web testing, password audit with test accounts
+Forbidden: denial of service, persistence, external callbacks
+Emergency contact: lab-owner@example.test</code></pre></div></div>
+
+<div class="cmd"><h3><code class="cmdname" dir="ltr">project tree</code><span>ساختار ثابت برای هر کار</span></h3>
+<div class="codewrap"><button class="copybtn">کپی</button><pre><code>PROJECT="$HOME/eng/$(date +%F)-lab"
+mkdir -p "$PROJECT"/{00-scope,01-notes,02-recon,03-evidence,04-screens,05-report}
+cd "$PROJECT"
+date -Is | tee 01-notes/start-time.txt
+script -a 01-notes/terminal.log          # ثبت نشست ترمینال
+# پایان ثبت: exit</code></pre></div>
+<p>رمزها، توکن‌ها و داده شخصی را در مخزن Git قرار ندهید. برای گزارش نمونه، همه شناسه‌ها را ناشناس کنید.</p></div>
+
+<h2>چرخه یک ارزیابی کنترل‌شده</h2>
+<div class="cmd"><h3>۱. آماده‌سازی و مشاهده</h3><p>مجوز، محدوده، زمان، snapshot و مسیر ذخیره را تأیید کنید. با روش‌های غیرفعال و نرخ پایین شروع کنید.</p></div>
+<div class="cmd"><h3>۲. کشف و فرضیه‌سازی</h3><p>دارایی، پورت و فناوری را فهرست کنید. هر خروجی ابزار یک سرنخ است، نه اثبات آسیب‌پذیری.</p></div>
+<div class="cmd"><h3>۳. اعتبارسنجی حداقلی</h3><p>کم‌خطرترین آزمونی را انتخاب کنید که وجود یا نبود یافته را نشان دهد. از تغییر داده و ایجاد اختلال پرهیز کنید.</p></div>
+<div class="cmd"><h3>۴. شواهد و پاک‌سازی</h3><p>درخواست، پاسخ، زمان، اسکرین‌شات و هش فایل را نگه دارید. حساب و فایل آزمایشی را طبق توافق حذف کنید.</p></div>
+<div class="cmd"><h3>۵. گزارش و بازآزمایی</h3><p>اثر را به زبان کسب‌وکار، جزئیات را برای تیم فنی و راهکار را به‌شکل قابل اجرا بنویسید. پس از اصلاح، همان آزمون را تکرار کنید.</p></div>
+
+<h2>قالب یک یافته خوب</h2>
+<div class="cmd"><h3><code class="cmdname" dir="ltr">finding.md</code><span>از عنوان تا راهکار</span></h3>
+<table><tr><th>بخش</th><th>پرسش</th></tr><tr><td>عنوان و شدت</td><td>چه مشکلی و با چه اولویتی؟</td></tr><tr><td>دارایی و اثر</td><td>کجا رخ می‌دهد و پیامد واقعی چیست؟</td></tr><tr><td>شاهد</td><td>کدام درخواست/پاسخ یا خروجی آن را ثابت می‌کند؟</td></tr><tr><td>بازتولید</td><td>کوتاه‌ترین مراحل امن و تکرارپذیر چیست؟</td></tr><tr><td>اصلاح</td><td>تیم مالک دقیقاً چه تغییری بدهد؟</td></tr><tr><td>بازآزمایی</td><td>اصلاح چگونه و در چه تاریخی تأیید شد؟</td></tr></table>
+<div class="note">💡 شدت را فقط از نام آسیب‌پذیری نگیرید؛ دسترسی لازم، قابلیت بهره‌برداری، حساسیت دارایی و کنترل‌های جبرانی را هم لحاظ کنید.</div></div>
+
+<h2>تمرین‌های پیشنهادی</h2>
+<div class="guide-grid">
+<div class="cmd"><h3>تمرین ۳۰ دقیقه‌ای</h3><p>یک VM را کشف کنید، پورت‌ها را با خروجی <code dir="ltr">-oA</code> ثبت و یک نقشه سرویس بنویسید.</p></div>
+<div class="cmd"><h3>تمرین وب</h3><p>یک برنامه آموزشی محلی را از Burp عبور دهید و پنج درخواست مهم را با توضیح جریان کار ثبت کنید.</p></div>
+<div class="cmd"><h3>تمرین فارنزیک</h3><p>روی یک فایل نمونه، نوع، اندازه، زمان، هش و رشته‌های قابل‌مشاهده را بدون اجرا ثبت کنید.</p></div>
+<div class="cmd"><h3>تمرین گزارش</h3><p>یک یافته فرضی را در یک صفحه برای مخاطب مدیریتی و فنی هم‌زمان توضیح دهید.</p></div>
+</div>
+<div class="success">✓ هدف نهایی: بتوانید توضیح دهید چه چیزی را، چرا، با چه مجوزی، با چه شاهدی و با چه راهکاری بررسی کرده‌اید.</div>
+
+<div class="pager"><a href="part4-forensics.html"><small>بخش قبلی</small>فارنزیک و گزارش →</a><a href="index.html"><small>پایان مسیر</small>بازگشت به خانه ←</a></div>
+</div><aside class="page-toc" aria-label="فهرست این صفحه"><strong>در این صفحه</strong><nav id="pageToc"></nav></aside></div>
+</main>
+<footer>بخش ۵ از ۵ · تمرین امن، مستندسازی دقیق، گزارش قابل اقدام</footer>
+<button class="btn back-top" id="backTop" aria-label="بازگشت به بالا">↑</button>
+<script src="app.js"></script>
+</body></html>
