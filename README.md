@@ -1,22 +1,24 @@
 # Kali 🐉
 
-**راهنمای متمرکز دستورات و ابزارهای Kali Linux** — فارسی، راست‌چین، تک‌فایل.
+**راهنمای متمرکز دستورات و ابزارهای Kali Linux** — فارسی، راست‌چین، آفلاین.
 
-A focused, Persian (RTL) guide to Kali Linux commands and program usage — a single self-contained `kali.html`, in the same design language as the [Linux-commands handbook](https://github.com/xvviix/Linux-commands).
+A focused, Persian (RTL) guide to Kali Linux commands and program usage — static multi-page site, same design language as the [Linux-commands handbook](https://github.com/xvviix/Linux-commands).
 
-## 📄 What's inside
+## 📄 Structure
 
-| Part | Topic |
+| File | Topic |
 |---|---|
-| 1 | Kali basics — install modes, root vs `kali` user, `apt` on Kali, metapackages, hygiene |
-| 2 | Recon & scanning — nmap, masscan, netdiscover, enum4linux, whatweb, theHarvester, amass… |
-| 3 | Web & exploitation — gobuster, nikto, sqlmap, wpscan, searchsploit, Metasploit, hydra, john, hashcat… |
-| 4 | Wireless, forensics & reporting — aircrack-ng suite, WiFite, tshark, volatility, binwalk, exiftool, cheatsheet |
+| `index.html` | Hub — TOC and navigation |
+| `part1-basics.html` | Kali basics — setup, `apt`, metapackages, users, services, WSL, Docker |
+| `part2-recon.html` | Recon & scanning — nmap, masscan, enum4linux, whatweb, theHarvester, amass, dnsrecon |
+| `part3-web.html` | Web & exploitation — gobuster, nikto, wpscan, sqlmap, searchsploit, Metasploit, hydra, john, hashcat |
+| `part4-forensics.html` | Wireless, forensics & reporting — aircrack-ng, wifite, tshark, volatility, binwalk, exiftool + final cheatsheet |
+| `style.css` | Shared stylesheet (dark/light theme, RTL, print-friendly) |
 
 ## 🚀 Usage
 
-Open `kali.html` in any browser — no server, no build step, no dependencies.
-Features: live search (`/`), dark/light theme, copy buttons on every code block, print/PDF friendly, full RTL.
+Open `index.html` in any browser — no server, no build step, no dependencies.
+Features: dark/light theme (saved), copy buttons on every code block, print-friendly, full RTL.
 
 ## ⚖️ Legal
 
