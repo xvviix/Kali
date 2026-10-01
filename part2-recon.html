@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="بخش ۲: شناخت و اسکن — nmap، masscan، enum4linux، whatweb، theHarvester، amass">
+<title>بخش ۲ — شناخت و اسکن (Recon)</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="topbar"><a href="index.html">🐉 راهنمای Kali</a><button class="btn" id="themeBtn">☀️</button></div>
+<div class="wrap">
+<div class="hero"><h1>بخش ۲ — <span class="grad">شناخت و اسکن</span></h1>
+<p>قبل از هر حمله، باید بدانید چه چیزی در مقابل شماست. این بخش از عمومی به جزئی می‌رود: هاست، پورت، سرویس، دامنه.</p></div>
+
+<div class="cmd"><h3><code class="cmdname" dir="ltr">nmap</code><span>پادشاه اسکنرها</span></h3>
+<div class="codewrap"><button class="copybtn">کپی</button><pre><code># اسکن سریع ۱۰۰ پورت پرتکرار
+sudo nmap -T4 -F 10.10.10.5
+# اسکن کامل پورت‌ها (TCP) با تشخیص سرویس/نسخه
+sudo nmap -p- --min-rate 5000 -T4 10.10.10.5
+sudo nmap -sV -sC -p 22,80,443 10.10.10.5
+# اسکن UDP (کند است؛ پورت‌های کلیدی)
+sudo nmap -sU --top-ports 50 10.10.10.5
+# اسکریپت‌های NSE — مثال‌های پرکاربرد
+sudo nmap --script vuln -p 80,443 10.10.10.5
+sudo nmap --script smb-vuln* -p 139,445 10.10.10.5
+# خروجی ساختاریافته
+sudo nmap -sV -oA scan_target 10.10.10.5   # متن + xml + grep</code></pre></div>
+<div class="note">💡 <code dir="ltr">-sV</code> نسخه سرویس را می‌خواند؛ <code dir="ltr">-sC</code> اسکریپت‌های پیش‌فرض را اجرا می‌کند. <code dir="ltr">-oA</code> برای گزارش‌گیری همیشه بزنید.</div></div>
+
+<div class="cmd"><h3><code class="cmdname" dir="ltr">masscan</code><span>اسکن کل اینترنت در دقیقه‌ها</span></h3>
+<p>برای رنج‌های بزرگ IP — سرعت nmap را ندارد در دقت، اما در سرعت بی‌رقیب است.</p>
+<div class="codewrap"><button class="copybtn">کپی</button><pre><code>sudo masscan 10.10.10.0/24 -p 80,443 --rate 1000
+sudo masscan 10.10.10.0/24 -p 1-65535 --rate 10000 > mass.txt
+# سپس پورت‌های یافته‌شده را با nmap دقیق بروید:
+nmap -sV -p $(grep -oP "\d+(?=/tcp)" mass.txt | tr "\n" "," | sed "s/,$//") 10.10.10.5</code></pre></div></div>
+
+<div class="cmd"><h3><code class="cmdname" dir="ltr">netdiscover / arp-scan</code><span>کشف هاست‌های محلی</span></h3>
+<div class="codewrap"><button class="copybtn">کپی</button><pre><code>sudo netdiscover -r 10.10.10.0/24
+sudo arp-scan --localnet
+sudo arp-scan 10.10.10.0/24 --interface eth0</code></pre></div></div>
+
+<div class="cmd"><h3><code class="cmdname" dir="ltr">enum4linux / smbclient</code><span>شمارش SMB</span></h3>
+<div class="codewrap"><button class="copybtn">کپی</button><pre><code>enum4linux -a 10.10.10.5 | tee enum.txt
+smbclient -L //10.10.10.5 -N            # لیست شیرهای ناشناس
+smbclient //10.10.10.5/share -N         # اتصال به شیر
+smbclient //10.10.10.5/share -U "user%pass"
+# داخل شیر: ls, get file, put file
+nbtscan 10.10.10.5                     # NetBIOS</code></pre></div></div>
+
+<div class="cmd"><h3><code class="cmdname" dir="ltr">whatweb</code><span>انگشت‌نگاری وب‌سایت</span></h3>
+<div class="codewrap"><button class="copybtn">کپی</button><pre><code>whatweb http://10.10.10.5
+whatweb -a 3 http://site.com            # سطح تجزیه‌ی تهاجمی‌تر</code></pre></div></div>
+
+<div class="cmd"><h3><code class="cmdname" dir="ltr">theHarvester</code><span>جمع‌آوری ایمیل/ساب‌دامنه از منابع عمومی</span></h3>
+<div class="codewrap"><button class="copybtn">کپی</button><pre><code>theHarvester -d company.com -l 200 -b google,bing,crtsh
+theHarvester -d company.com -b linkedin   # نام کارکنان</code></pre></div></div>
+
+<div class="cmd"><h3><code class="cmdname" dir="ltr">amass</code><span>نقشه‌برداری حرفه‌ای زیرساخت دامنه</span></h3>
+<div class="codewrap"><button class="copybtn">کپی</button><pre><code>amass enum -d company.com -o amass.txt
+amass enum -passive -d company.com        # فقط منابع عمومی
+amass viz -d3 company.com                 # نمودار گرافی</code></pre></div></div>
+
+<div class="cmd"><h3><code class="cmdname" dir="ltr">dnsrecon / dig</code><span>بررسی DNS و transfer</span></h3>
+<div class="codewrap"><button class="copybtn">کپی</button><pre><code>dnsrecon -d company.com -t std
+dnsrecon -d company.com -t axfr         # تلاش zone transfer
+dig axfr company.com @ns1.company.com
+dig +short mail.company.com; host -t MX company.com</code></pre></div></div>
+
+<div class="note">📚 روش درست recon: عمومی (whois/Google) → دامنه (amass) → هاست (nmap -sn) → پورت (-p-) → سرویس (-sV) → شمارش (enum4linux/whatweb) → سپس فاز اکسپلویت بخش ۳.</div>
+</div>
+<footer>بخش ۲ از ۴ — <a href="part3-web.html">بعدی: وب و اکسپلویت ←</a></footer>
+<script>
+var b=document.getElementById("themeBtn"),h=document.documentElement;
+function t(v){h.setAttribute("data-theme",v);b.textContent=v==="light"?"🌙":"☀️";try{localStorage.setItem("kali-guide-theme",v)}catch(e){}}
+var s=null;try{s=localStorage.getItem("kali-guide-theme")}catch(e){}
+t(s==="light"?"light":"dark");
+b.addEventListener("click",function(){t(h.getAttribute("data-theme")==="light"?"dark":"light")});
+document.querySelectorAll(".codewrap").forEach(function(w){var c=w.querySelector(".copybtn");if(!c)return;c.addEventListener("click",function(){var t2=w.querySelector("code").textContent.replace(/\n$/,"");function ok(){c.classList.add("ok");c.textContent="کپی شد ✓";setTimeout(function(){c.classList.remove("ok");c.textContent="کپی"},1600)}navigator.clipboard?navigator.clipboard.writeText(t2).then(ok,ok):ok()})});
+</script>
+</body>
+</html>
