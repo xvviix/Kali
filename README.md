@@ -1,28 +1,144 @@
-# Kali 🐉
+# Kali Linux Persian Handbook 🐉
 
-**راهنمای متمرکز دستورات و ابزارهای Kali Linux** — فارسی، راست‌چین، آفلاین.
+هندبوک جامع، فارسی، راست‌چین و آفلاین برای Kali Linux؛ با طراحی هماهنگ با پروژه [Linux-commands](https://github.com/xvviix/Linux-commands).
 
-A focused, Persian (RTL) guide to Kali Linux commands and program usage — static multi-page site, same design language as the [Linux-commands handbook](https://github.com/xvviix/Linux-commands).
+[**مشاهده نسخه زنده**](https://xvviix.github.io/Kali/)
 
-## 📄 Structure
+## ✨ نسخه فعلی
 
-| File | Topic |
-|---|---|
-| `index.html` | Hub — TOC and navigation |
-| `part1-basics.html` | Kali basics — setup, `apt`, metapackages, users, services, WSL, Docker |
-| `part2-recon.html` | Recon & scanning — nmap, masscan, enum4linux, whatweb, theHarvester, amass, dnsrecon |
-| `part3-web.html` | Web & exploitation — gobuster, nikto, wpscan, sqlmap, searchsploit, Metasploit, hydra, john, hashcat |
-| `part4-forensics.html` | Wireless, forensics & reporting — aircrack-ng, wifite, tshark, volatility, binwalk, exiftool + final cheatsheet |
-| `style.css` | Shared stylesheet (dark/light theme, RTL, print-friendly) |
+- **۵۲۰ ابزار و فرمان** در **۴۰ فصل مرجع** به‌همراه **۱۰ فصل عملی هک و امنیت**
+- یک صفحه جامع با لینک مستقیم به هر ابزار
+- گردش‌کار هفت‌مرحله‌ای از تعریف محدوده تا بازآزمایی
+- نصب، سینتکس، زیرفرمان‌ها و گزینه‌های مهم هر ابزار
+- فرمان‌های تکمیلی کشف مسیر، مستندات، ثبت خروجی، timeout، retry، lock و کنترل منابع
+- چهار فرمان کشف و مستندسازی افزوده‌شده به هر یک از ۵۲۰ کارت ابزار
+- مثال‌های قابل کپی با هدف‌ها و دامنه‌های مستنداتی
+- پیوند ابزار قبلی/بعدی، بازگشت به فصل و permalink قابل کپی
+- زنجیره‌های عملی: کشف → سرویس → enumeration → شاهد → گزارش
+- برچسب سطح یادگیری و نوع اجرا: پایه، فعال، تحلیل یا فقط لابراتوار
+- جست‌وجوی یکپارچه در ۵۲۰ کارت مرجع و ۱۶۰ درس امنیتی با فیلتر دامنه
+- جست‌وجوی چندواژه‌ای با کلید `/`، فیلتر فصل و پاک‌کردن با `Esc`
+- علامت‌گذاری «مطالعه شد» برای ۶۸۰ درس با ذخیره محلی پیشرفت
+- permalink مستقل برای تمام درس‌های امنیتی و ابزارهای مرجع
+- پیمایش ابزارها با کلیدهای `J` و `K`
+- نمای عادی/فشرده با ذخیره انتخاب کاربر
+- چاپ یا ذخیره PDF، تم تاریک/روشن و progress مطالعه
+- PWA قابل نصب با cache آفلاین در GitHub Pages
+- metadata کامل‌تر برای SEO و اشتراک‌گذاری
+- فونت‌های داخلی **Vazirmatn** و **JetBrains Mono**
+- بدون CDN یا کتابخانه خارجی
 
-## 🚀 Usage
+## 📚 فصل‌ها
 
-Open `index.html` in any browser — no server, no build step, no dependencies.
-Features: dark/light theme (saved), copy buttons on every code block, print-friendly, full RTL.
+| # | موضوع | تعداد |
+|---|---|---:|
+| ۱ | مبانی، نصب و نگهداری | ۱۳ |
+| ۲ | شل، پروژه و زنجیره‌کردن فرمان‌ها | ۱۳ |
+| ۳ | OSINT و شناسایی غیرفعال | ۱۳ |
+| ۴ | کشف شبکه، پورت و سرویس | ۱۳ |
+| ۵ | DNS، SMB، SNMP و سرویس‌ها | ۱۳ |
+| ۶ | کشف و ارزیابی برنامه وب | ۱۳ |
+| ۷ | اعتبارسنجی آسیب‌پذیری و فریم‌ورک‌ها | ۱۳ |
+| ۸ | ممیزی رمز، هش و احراز هویت | ۱۳ |
+| ۹ | شبکه بی‌سیم و بلوتوث آزمایشگاهی | ۱۳ |
+| ۱۰ | ثبت و تحلیل ترافیک | ۱۳ |
+| ۱۱ | فارنزیک فایل، دیسک و حافظه | ۱۳ |
+| ۱۲ | مهندسی معکوس، تحلیل و گزارش | ۱۳ |
+| ۱۳ | Active Directory و محیط Windows | ۱۳ |
+| ۱۴ | Cloud، کانتینر و Kubernetes | ۱۳ |
+| ۱۵ | Android و تحلیل برنامه موبایل | ۱۳ |
+| ۱۶ | دفاع، hardening و پایش میزبان | ۱۳ |
+| ۱۷ | پایگاه داده و سرویس‌های داده | ۱۳ |
+| ۱۸ | دسترسی راه‌دور و پروتکل‌های مدیریتی | ۱۳ |
+| ۱۹ | سخت‌افزار، سریال، SDR و IoT | ۱۳ |
+| ۲۰ | Redirection، اتصال فرمان‌ها و اتوماسیون | ۱۳ |
+| ۲۱ | آزمون API، JSON، XML و WebSocket | ۱۳ |
+| ۲۲ | مدیریت و ارزیابی راه‌دور Windows | ۱۳ |
+| ۲۳ | رمزنگاری، کلید، گواهی و PKI | ۱۳ |
+| ۲۴ | ذخیره‌سازی، image و بازیابی داده | ۱۳ |
+| ۲۵ | ایمیل، SMTP/IMAP و تحلیل پیام | ۱۳ |
+| ۲۶ | VPN، تونل و اتصال امن | ۱۳ |
+| ۲۷ | لاگ، مشاهده‌پذیری و pipeline رویداد | ۱۳ |
+| ۲۸ | پشتیبان، آرشیو و همگام‌سازی امن | ۱۳ |
+| ۲۹ | امنیت زنجیره تأمین و artifact | ۱۳ |
+| ۳۰ | زیرساخت به‌صورت کد و Policy as Code | ۱۳ |
+| ۳۱ | ردیابی runtime، performance و crash | ۱۳ |
+| ۳۲ | زیرساخت شبکه، routing و لینک | ۱۳ |
+| ۳۳ | DNSSEC، resolver و مدیریت zone | ۱۳ |
+| ۳۴ | Reverse proxy، gateway و آزمون ظرفیت | ۱۳ |
+| ۳۵ | مدیریت secret، vault و رمزگذاری config | ۱۳ |
+| ۳۶ | CI/CD، pipeline و GitOps | ۱۳ |
+| ۳۷ | مجازی‌سازی، image و آزمایشگاه VM | ۱۳ |
+| ۳۸ | یکپارچگی میزبان، compliance و firmware | ۱۳ |
+| ۳۹ | زمان، NTP/PTP و زمان‌بندی job | ۱۳ |
+| ۴۰ | Git، تاریخچه و امنیت repository | ۱۳ |
 
-## ⚖️ Legal
+## 🛡️ دوره پیشرفته ۱۰ فصلی هک و امنیت
 
-For **authorized security testing, learning, and CTF use only**. Always get written permission before testing any system you don't own.
+این دوره به انتهای همان `index.html` افزوده شده و شامل ۱۶۰ درس ابزارمحور و ۳۰ ابزار تازه‌معرفی‌شده است:
+
+1. مبانی لابراتوار، محدوده و ثبت شواهد
+2. OSINT و شناسایی غیرفعال
+3. کشف شبکه و شناسایی سرویس
+4. ارزیابی امنیت برنامه وب
+5. امنیت API، JWT، gRPC و WebSocket
+6. اعتبارسنجی آسیب‌پذیری و بهره‌برداری آزمایشگاهی
+7. رمز عبور، Hash و احراز هویت
+8. امنیت Active Directory و Windows
+9. امنیت Wi-Fi و Bluetooth
+10. تحلیل ترافیک، فارنزیک و گزارش
+
+در این ارتقا به هر فصل ۳ ابزار تکمیلی افزوده شد؛ در مجموع ۳۰ معرفی جدید با برچسب «جدید در دوره» و توضیح دلیل انتخاب ابزار. تعداد فصل‌ها ثابت مانده است.
+
+هر درس شامل نقش امنیتی ابزار، نصب، سینتکس، گزینه‌ها، مثال‌های عملی، ثبت `stdout` و `stderr`، محدودیت زمان، exit code و هش شواهد است. هر فصل اکنون یک لابراتوار پایه و یک تمرین پیشرفته چندابزاری، اهداف یادگیری، خروجی‌های مورد انتظار، معیار پایان، خطاهای رایج، کنترل دفاعی، روش ارزیابی و ناوبری فصل قبل/بعد دارد. مثال‌های هر ابزار نیز خط‌به‌خط تشریح می‌شوند.
+
+## 🚀 اجرا
+
+`index.html` را مستقیماً باز کنید، یا یک سرور محلی اختیاری اجرا کنید:
+
+```bash
+python3 -m http.server 8000
+```
+
+سپس به `http://localhost:8000` بروید.
+
+## 🛠️ بازسازی هندبوک
+
+محتوای صفحه اصلی از داده‌های ساختاریافته داخل `build_handbook.py` ساخته می‌شود:
+
+```bash
+python3 build_handbook.py
+```
+
+اسکریپت به کتابخانه جانبی نیاز ندارد و تعداد فصل‌ها و ابزارها را هنگام ساخت بررسی می‌کند.
+
+## 🗂️ ساختار
+
+```text
+index.html             هندبوک تک‌صفحه‌ای تولیدشده
+build_handbook.py      منبع محتوا و سازنده هندبوک
+fonts.css              Vazirmatn و JetBrains Mono داخلی
+style.css              طراحی RTL، واکنش‌گرا و مناسب چاپ
+app.js                 جست‌وجو، فیلتر، پیمایش، تم، کپی و چاپ
+manifest.webmanifest   اطلاعات نصب PWA
+sw.js                  cache آفلاین نسخه وب
+icon.svg               آیکن برداری و maskable
+part*.html             فصل‌های قدیمی؛ برای سازگاری لینک‌ها
+```
+
+## 🤝 مشارکت
+
+برای اصلاح فرمان یا افزودن ابزار، ورودی مربوطه را در `build_handbook.py` تغییر دهید و دوباره build بگیرید. هر مثال باید:
+
+1. روی نسخه فعلی Kali بررسی شود؛
+2. هدف آموزشی، دفاعی یا مجاز داشته باشد؛
+3. پیش‌نیاز و خطر را شفاف توضیح دهد؛
+4. از دامنه‌ها و IPهای مستنداتی استفاده کند؛
+5. هیچ داده حساس، credential واقعی یا هدف عمومی را شامل نشود.
+
+## ⚖️ استفاده مسئولانه
+
+این پروژه فقط برای **یادگیری، CTF، لابراتوار شخصی و ارزیابی دارای مجوز کتبی** است. پیش از هر آزمون، مالکیت، محدوده و قواعد درگیری را تأیید کنید.
 
 ---
 

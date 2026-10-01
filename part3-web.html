@@ -4,11 +4,24 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="بخش ۳: وب و اکسپلویت — gobuster، nikto، sqlmap، searchsploit، Metasploit، hydra، john، hashcat">
 <title>بخش ۳ — وب، اکسپلویت و کرک پسورد</title>
+<meta name="theme-color" content="#07100f">
+<link rel="stylesheet" href="fonts.css">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<div class="topbar"><a href="index.html">🐉 راهنمای Kali</a><button class="btn" id="themeBtn">☀️</button></div>
-<div class="wrap">
+<a class="skip-link" href="#content">رفتن به محتوا</a>
+<header class="topbar" id="topbar">
+  <div class="progress" id="progress"></div>
+  <div class="nav-inner">
+    <a class="brand" href="index.html"><span class="brand-mark">🐉</span><span class="brand-text">هندبوک Kali</span></a>
+    <label class="global-search"><span class="search-icon">🔍</span><input id="siteSearch" type="search" placeholder="جست‌وجوی این صفحه… مثلاً: nmap، شبکه، Burp" autocomplete="off" aria-label="جست‌وجو در صفحه"><kbd>/</kbd></label>
+    <div class="actions"><button class="btn icon-btn" id="printBtn" aria-label="چاپ یا ذخیره PDF" title="چاپ یا ذخیره PDF">🖨️</button><button class="btn icon-btn" id="themeBtn" aria-label="تغییر تم" title="تغییر تم روشن/تاریک">☀️</button></div>
+  </div>
+  <div class="results-bar" id="resultsBar"></div>
+</header>
+<main class="wrap" id="content">
+<div class="breadcrumbs"><a href="index.html">خانه</a><span>←</span><span>آزمون امنیت وب</span></div>
+<div class="page-layout"><div class="page-main">
 <div class="hero"><h1>بخش ۳ — <span class="grad">وب، اکسپلویت و کرک</span></h1>
 <p>از پیدا کردن مسیر مخفی تا شل گرفتن و شکستن هش — قلب عملیاتی تست نفوذ.</p></div>
 
@@ -17,13 +30,29 @@
 gobuster dir -u http://10.10.10.5 -w /usr/share/seclists/Discovery/Web-Content/raft-medium-words.txt -x php,html,bak
 dirb http://10.10.10.5 /usr/share/wordlists/dirb/common.txt
 # ساب‌دامنه:
-gobuster dns -d site.com -w /usr/share/seclists/Discovery/DNS/subdomains-top1million.txt</code></pre></div>
+gobuster dns -d example.com -w /usr/share/seclists/Discovery/DNS/subdomains-top1million.txt</code></pre></div>
 <div class="note">💡 ساب‌دامنه و مسیرهای یافت‌شده را در یادداشت پروژه ثبت کنید؛ زنجیره اکسپلویت اغلب از اینجا شروع می‌شود.</div></div>
+
+
+<div class="cmd"><h3><code class="cmdname" dir="ltr">Burp Suite</code><span>مشاهده و بازپخش درخواست‌ها</span></h3>
+<p>مرورگر آزمایش را از پروکسی محلی عبور دهید، درخواست را در HTTP history پیدا کنید و فقط روی هدف مجاز بازپخش کنید.</p>
+<div class="codewrap"><button class="copybtn">کپی</button><pre><code>burpsuite
+# پراکسی پیش‌فرض: 127.0.0.1:8080
+# برای ابزار خط فرمان:
+curl -x http://127.0.0.1:8080 http://10.10.10.5/</code></pre></div>
+<div class="note">💡 برای HTTPS در لابراتوار، گواهی CA خود Burp را فقط در پروفایل مرورگر آزمایش نصب کنید؛ نه در مرورگر روزمره.</div></div>
+
+<div class="cmd"><h3><code class="cmdname" dir="ltr">ffuf</code><span>کشف محتوای سریع و کنترل‌شده</span></h3>
+<div class="codewrap"><button class="copybtn">کپی</button><pre><code>ffuf -u http://10.10.10.5/FUZZ -w /usr/share/seclists/Discovery/Web-Content/common.txt
+ffuf -u http://10.10.10.5/FUZZ -w words.txt -mc 200,204,301,302,307,401,403 -rate 20
+ffuf -u http://10.10.10.5/ -H 'Host: FUZZ.example.test' -w subdomains.txt -fs 0</code></pre></div>
+<p><code dir="ltr">-rate</code> را با ظرفیت محیط هماهنگ کنید و پاسخ‌های مشابه را با اندازه یا کد فیلتر کنید.</p></div>
+
 
 <div class="cmd"><h3><code class="cmdname" dir="ltr">nikto</code><span>اسکنر آسیب‌پذیری وب</span></h3>
 <div class="codewrap"><button class="copybtn">کپی</button><pre><code>nikto -h http://10.10.10.5
 nikto -h http://10.10.10.5 -o nikto.html -Format html
-nikto -h https://site.com -ssl -Tuning 123b   # فقط تست‌های منتخب</code></pre></div></div>
+nikto -h https://example.com -ssl -Tuning 123b   # فقط تست‌های منتخب</code></pre></div></div>
 
 <div class="cmd"><h3><code class="cmdname" dir="ltr">wpscan</code><span>اسکنر اختصاصی WordPress</span></h3>
 <div class="codewrap"><button class="copybtn">کپی</button><pre><code>wpscan --url http://10.10.10.5/wp --enumerate ap,at,cb,dbe
@@ -77,15 +106,10 @@ hashcat -m 0 hash.txt --show
 hashcat --example-hashes | less          # لیست همه مدها</code></pre></div></div>
 
 <div class="note">📚 کتابخانه‌های کلیدی: <code dir="ltr">/usr/share/wordlists/rockyou.txt</code> (قبل از استفاده: <code dir="ltr">gunzip</code> کنید) و <code dir="ltr">/usr/share/seclists/</code>.</div>
-</div>
-<footer>بخش ۳ از ۴ — <a href="part4-forensics.html">بعدی: وایرلس، فارنزیک و گزارش ←</a></footer>
-<script>
-var b=document.getElementById("themeBtn"),h=document.documentElement;
-function t(v){h.setAttribute("data-theme",v);b.textContent=v==="light"?"🌙":"☀️";try{localStorage.setItem("kali-guide-theme",v)}catch(e){}}
-var s=null;try{s=localStorage.getItem("kali-guide-theme")}catch(e){}
-t(s==="light"?"light":"dark");
-b.addEventListener("click",function(){t(h.getAttribute("data-theme")==="light"?"dark":"light")});
-document.querySelectorAll(".codewrap").forEach(function(w){var c=w.querySelector(".copybtn");if(!c)return;c.addEventListener("click",function(){var t2=w.querySelector("code").textContent.replace(/\n$/,"");function ok(){c.classList.add("ok");c.textContent="کپی شد ✓";setTimeout(function(){c.classList.remove("ok");c.textContent="کپی"},1600)}navigator.clipboard?navigator.clipboard.writeText(t2).then(ok,ok):ok()})});
-</script>
+</div><aside class="page-toc" aria-label="فهرست این صفحه"><strong>در این صفحه</strong><nav id="pageToc"></nav></aside></div>
+</main>
+<footer>بخش ۳ از ۵ — <a href="part4-forensics.html">بعدی: وایرلس، فارنزیک و گزارش ←</a></footer>
+<button class="btn back-top" id="backTop" aria-label="بازگشت به بالا">↑</button>
+<script src="app.js"></script>
 </body>
 </html>

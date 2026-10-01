@@ -4,11 +4,24 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="بخش ۴: وایرلس، فارنزیک و گزارش‌دهی — aircrack-ng، wifite، tshark، binwalk، exiftool و برگه تقلب">
 <title>بخش ۴ — وایرلس، فارنزیک و گزارش</title>
+<meta name="theme-color" content="#07100f">
+<link rel="stylesheet" href="fonts.css">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<div class="topbar"><a href="index.html">🐉 راهنمای Kali</a><button class="btn" id="themeBtn">☀️</button></div>
-<div class="wrap">
+<a class="skip-link" href="#content">رفتن به محتوا</a>
+<header class="topbar" id="topbar">
+  <div class="progress" id="progress"></div>
+  <div class="nav-inner">
+    <a class="brand" href="index.html"><span class="brand-mark">🐉</span><span class="brand-text">هندبوک Kali</span></a>
+    <label class="global-search"><span class="search-icon">🔍</span><input id="siteSearch" type="search" placeholder="جست‌وجوی این صفحه… مثلاً: nmap، شبکه، Burp" autocomplete="off" aria-label="جست‌وجو در صفحه"><kbd>/</kbd></label>
+    <div class="actions"><button class="btn icon-btn" id="printBtn" aria-label="چاپ یا ذخیره PDF" title="چاپ یا ذخیره PDF">🖨️</button><button class="btn icon-btn" id="themeBtn" aria-label="تغییر تم" title="تغییر تم روشن/تاریک">☀️</button></div>
+  </div>
+  <div class="results-bar" id="resultsBar"></div>
+</header>
+<main class="wrap" id="content">
+<div class="breadcrumbs"><a href="index.html">خانه</a><span>←</span><span>وایرلس و فارنزیک</span></div>
+<div class="page-layout"><div class="page-main">
 <div class="hero"><h1>بخش ۴ — <span class="grad">وایرلس، فارنزیک و گزارش</span></h1>
 <p>گوشه‌های تخصصی Kali: شبکه‌های بی‌سیم، تحلیل شواهد دیجیتال، و مهارتی که همه‌چیز را کامل می‌کند: گزارش‌نویسی.</p></div>
 
@@ -48,7 +61,26 @@ binwalk --dd=".*" firmware.bin      # استخراج همه‌چیز</code></pre
 <div class="cmd"><h3><code class="cmdname" dir="ltr">exiftool</code><span>متادیتا — گاهی همه‌چیز در توضیحات تصویر است</span></h3>
 <div class="codewrap"><button class="copybtn">کپی</button><pre><code>exiftool photo.jpg
 exiftool -a -u -g1 photo.jpg         # همه تگ‌ها شامل مخفی
-exiftool -all= photo_clean.jpg photo.jpg   # حذف متادیتا</code></pre></div></div>
+cp photo.jpg photo_clean.jpg
+exiftool -all= -overwrite_original photo_clean.jpg   # حذف متادیتا از نسخه کپی</code></pre></div></div>
+
+
+<div class="cmd"><h3><code class="cmdname" dir="ltr">sha256sum</code><span>تمامیت و زنجیره نگهداری شواهد</span></h3>
+<p>روی اصل شواهد کار نکنید. یک نسخه فقط‌خواندنی نگه دارید، هش را قبل و بعد ثبت کنید و زمان/مالک هر انتقال را بنویسید.</p>
+<div class="codewrap"><button class="copybtn">کپی</button><pre><code>sha256sum evidence.img | tee evidence.img.sha256
+sha256sum -c evidence.img.sha256
+stat --format='%n | %s bytes | %y' evidence.img
+# مونت فقط‌خواندنی نمونه:
+sudo mount -o ro,loop,noexec evidence.img /mnt/evidence</code></pre></div></div>
+
+<div class="cmd"><h3><code class="cmdname" dir="ltr">file / strings / yara</code><span>تریاژ اولیه فایل</span></h3>
+<div class="codewrap"><button class="copybtn">کپی</button><pre><code>file suspicious.bin
+sha256sum suspicious.bin
+strings -a -n 8 suspicious.bin | less
+xxd -l 128 suspicious.bin
+yara -r rules/ sample-directory/</code></pre></div>
+<div class="warn">⚠️ فایل ناشناس را روی میزبان اصلی اجرا نکنید. تحلیل پویا باید در VM ایزوله، بدون پوشه مشترک و با شبکه کنترل‌شده انجام شود.</div></div>
+
 
 <div class="cmd"><h3><code class="cmdname" dir="ltr">reporting</code><span>گزارش‌دهی — مهارت واقعی حرفه‌ای</span></h3>
 <p>هکر خوب گزارش خوب می‌نویسد. مشتری خروجی شما را از گزارش می‌فهمد، نه از ترمینال.</p>
@@ -63,7 +95,7 @@ mkdir -p ~/eng/{recon,exploit,loot,report,screens}
 nmap -sV -oA recon/initial 10.10.10.5
 # در پایان، خروجی‌ها را به گزارش پیوست کنید.</code></pre></div></div>
 
-<h2>⭐ برگه تقلب نهایی</h2>
+<h2 id="cheatsheet">⭐ برگه تقلب نهایی</h2>
 <div class="codewrap"><button class="copybtn">کپی</button><pre><code># ── بروزرسانی ──
 sudo apt update && sudo apt full-upgrade -y
 # ── شناخت ──
@@ -80,15 +112,10 @@ sudo tcpdump -i tun0 -A | head          # ترافیک خودت را ببین
 ls -la /var/www/html/ ; cat /etc/crontab # مکان‌های کلاسیک</code></pre></div>
 
 <div class="note">🌱 یادگیری در Kali با «مجوز» شروع می‌شود، نه با دستور. هک‌باکس، TryHackMe، Proving Grounds و VMهای خودتان — بعد از آن، دنیای واقعی.</div>
-</div>
-<footer>بخش ۴ از ۴ — <a href="index.html">بازگشت به فهرست ←</a></footer>
-<script>
-var b=document.getElementById("themeBtn"),h=document.documentElement;
-function t(v){h.setAttribute("data-theme",v);b.textContent=v==="light"?"🌙":"☀️";try{localStorage.setItem("kali-guide-theme",v)}catch(e){}}
-var s=null;try{s=localStorage.getItem("kali-guide-theme")}catch(e){}
-t(s==="light"?"light":"dark");
-b.addEventListener("click",function(){t(h.getAttribute("data-theme")==="light"?"dark":"light")});
-document.querySelectorAll(".codewrap").forEach(function(w){var c=w.querySelector(".copybtn");if(!c)return;c.addEventListener("click",function(){var t2=w.querySelector("code").textContent.replace(/\n$/,"");function ok(){c.classList.add("ok");c.textContent="کپی شد ✓";setTimeout(function(){c.classList.remove("ok");c.textContent="کپی"},1600)}navigator.clipboard?navigator.clipboard.writeText(t2).then(ok,ok):ok()})});
-</script>
+</div><aside class="page-toc" aria-label="فهرست این صفحه"><strong>در این صفحه</strong><nav id="pageToc"></nav></aside></div>
+</main>
+<footer>بخش ۴ از ۵ — <a href="part5-lab.html">بعدی: لابراتوار و گردش‌کار ←</a></footer>
+<button class="btn back-top" id="backTop" aria-label="بازگشت به بالا">↑</button>
+<script src="app.js"></script>
 </body>
 </html>
